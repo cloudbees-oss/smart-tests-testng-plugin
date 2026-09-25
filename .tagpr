@@ -4,3 +4,4 @@
   tagPrefix = launchable-testng
   vPrefix = false
   changelog = false
+  postVersionCommand = mvn --batch-mode versions:set -DnewVersion="${TAGPR_NEXT_VERSION##*/}" -DgenerateBackupPoms=false
