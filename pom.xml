@@ -12,9 +12,9 @@
   <description>Launchable TestNG support</description>
 
   <scm>
-    <connection>scm:git:git@github.com:launchableinc/testng.git</connection>
-    <url>scm:git:git@github.com:launchableinc/testng.git</url>
-    <developerConnection>scm:git:git@github.com:launchableinc/testng.git</developerConnection>
+    <connection>scm:git:git@github.com:cloudbees-oss/smart-tests-testng-plugin.git</connection>
+    <url>scm:git:git@github.com:cloudbees-oss/smart-tests-testng-plugin.git</url>
+    <developerConnection>scm:git:git@github.com:cloudbees-oss/smart-tests-testng-plugin.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
