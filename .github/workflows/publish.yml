@@ -1,22 +1,46 @@
-name: Publish to Maven Central
+name: Release and Publish to Maven Central
 
 on:
   push:
-    tags:
-      - 'launchable-testng-*'
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  publish:
+  tagpr:
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.run-tagpr.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: run-tagpr
+        uses: Songmu/tagpr@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    needs: tagpr
+    runs-on: ubuntu-latest
+    if: needs.tagpr.outputs.tag != ''
     env:
       MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
       MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.tagpr.outputs.tag }}
+          fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
