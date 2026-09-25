@@ -41,3 +41,18 @@ used — switch to the `SMART_TESTS_*` names when convenient.
 
 Launchable, Inc.
 
+## Releases
+
+Releases are managed by tagpr. On every push to `main`, tagpr creates or
+updates a release pull request. Merging that pull request creates a
+`launchable-testng-<version>` tag and a GitHub Release. The tag then triggers
+the Maven Central publishing workflow.
+
+Repository administrators must enable **Settings → Actions → General →
+Workflow permissions → Allow GitHub Actions to create and approve pull
+requests**. Configure these repository secrets before merging a release PR:
+
+- `MAVEN_CENTRAL_USERNAME` and `MAVEN_CENTRAL_PASSWORD`: Central Portal user
+  token credentials.
+- `MAVEN_GPG_PRIVATE_KEY` and `MAVEN_GPG_PASSPHRASE`: the signing key and its
+  passphrase.
