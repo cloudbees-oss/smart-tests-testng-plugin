@@ -45,8 +45,8 @@ Launchable, Inc.
 
 Releases are managed by tagpr. On every push to `main`, tagpr creates or
 updates a release pull request. Merging that pull request creates a
-`launchable-testng-<version>` tag and a GitHub Release. The tag then triggers
-the Maven Central publishing workflow.
+`launchable-testng/<version>` tag and a GitHub Release. The same workflow then
+publishes the tagged revision to Maven Central.
 
 Repository administrators must enable **Settings → Actions → General →
 Workflow permissions → Allow GitHub Actions to create and approve pull

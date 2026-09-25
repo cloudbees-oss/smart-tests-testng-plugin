@@ -1,6 +1,6 @@
 [tagpr]
   releaseBranch = main
   versionFile = pom.xml
-  tagPrefix = launchable-testng-
+  tagPrefix = launchable-testng
   vPrefix = false
   changelog = false
