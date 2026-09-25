@@ -21,8 +21,16 @@ import java.util.logging.Logger;
 @MetaInfServices(ITestNGListener.class)
 public class TestSelector implements IMethodInterceptor {
 
+	public static final String SMART_TESTS_SUBSET_FILE = "SMART_TESTS_SUBSET_FILE_PATH";
+
+	public static final String SMART_TESTS_REST_FILE = "SMART_TESTS_REST_FILE_PATH";
+
+	/** @deprecated use {@link #SMART_TESTS_SUBSET_FILE} instead. Kept for backward compatibility. */
+	@Deprecated
 	public static final String LAUNCHABLE_SUBSET_FILE = "LAUNCHABLE_SUBSET_FILE_PATH";
 
+	/** @deprecated use {@link #SMART_TESTS_REST_FILE} instead. Kept for backward compatibility. */
+	@Deprecated
 	public static final String LAUNCHABLE_REST_FILE = "LAUNCHABLE_REST_FILE_PATH";
 
 	private static final Logger LOGGER = Logger.getLogger(TestSelector.class.getName());
@@ -37,11 +45,26 @@ public class TestSelector implements IMethodInterceptor {
 	}
 
 	public TestSelector() {
-		this.subsetFile = System.getenv(LAUNCHABLE_SUBSET_FILE) == null ? null
-				: new File(System.getenv(LAUNCHABLE_SUBSET_FILE));
+		this.subsetFile = resolveFile(SMART_TESTS_SUBSET_FILE, LAUNCHABLE_SUBSET_FILE);
+		this.restFile = resolveFile(SMART_TESTS_REST_FILE, LAUNCHABLE_REST_FILE);
+	}
 
-		this.restFile = System.getenv(LAUNCHABLE_REST_FILE) == null ? null
-				: new File(System.getenv(LAUNCHABLE_REST_FILE));
+	private static File resolveFile(String currentEnvName, String legacyEnvName) {
+		return resolveFile(System.getenv(currentEnvName), System.getenv(legacyEnvName), currentEnvName, legacyEnvName);
+	}
+
+	/* package */ static File resolveFile(String currentValue, String legacyValue, String currentEnvName, String legacyEnvName) {
+		if (currentValue != null) {
+			return new File(currentValue);
+		}
+
+		if (legacyValue != null) {
+			LOGGER.warning(String.format(
+					"%s is deprecated. Please use %s instead.", legacyEnvName, currentEnvName));
+			return new File(legacyValue);
+		}
+
+		return null;
 	}
 
 	@Override
@@ -62,7 +85,7 @@ public class TestSelector implements IMethodInterceptor {
 			} catch (FileNotFoundException e) {
 				LOGGER.warning(String.format(
 						"Cannot read subset file %s. Make sure to set subset result file path to %s",
-						subsetFile, LAUNCHABLE_SUBSET_FILE));
+						subsetFile, SMART_TESTS_SUBSET_FILE));
 				return methods;
 			}
 
@@ -77,7 +100,7 @@ public class TestSelector implements IMethodInterceptor {
 			} catch (FileNotFoundException e) {
 				LOGGER.warning(
 						String.format("Cannot read rest file %s. Make sure to set rest result file path to %s",
-								restFile, LAUNCHABLE_REST_FILE));
+								restFile, SMART_TESTS_REST_FILE));
 				return methods;
 			}
 

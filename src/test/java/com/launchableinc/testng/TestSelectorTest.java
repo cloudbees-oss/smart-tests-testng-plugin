@@ -97,6 +97,27 @@ public class TestSelectorTest {
 		assertTestCounts(0);
 	}
 
+	@Test
+	public void resolveFile_prefers_current_env_over_legacy() {
+		File resolved = TestSelector.resolveFile("current.txt", "legacy.txt",
+				TestSelector.SMART_TESTS_SUBSET_FILE, TestSelector.LAUNCHABLE_SUBSET_FILE);
+		assertEquals(resolved, new File("current.txt"));
+	}
+
+	@Test
+	public void resolveFile_falls_back_to_legacy_env() {
+		File resolved = TestSelector.resolveFile(null, "legacy.txt",
+				TestSelector.SMART_TESTS_SUBSET_FILE, TestSelector.LAUNCHABLE_SUBSET_FILE);
+		assertEquals(resolved, new File("legacy.txt"));
+	}
+
+	@Test
+	public void resolveFile_returns_null_when_neither_env_is_set() {
+		File resolved = TestSelector.resolveFile(null, null,
+				TestSelector.SMART_TESTS_SUBSET_FILE, TestSelector.LAUNCHABLE_SUBSET_FILE);
+		assertEquals(resolved, null);
+	}
+
 
 
 	@BeforeMethod
